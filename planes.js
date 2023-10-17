@@ -37,16 +37,25 @@ async function callAPIMethod(method, params) {
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
 
     const response = await fetch(url);
-    return await response.json();
+    
+    const data = null;
+
+    try {
+        data = await response.json();
+    } catch (e) {
+        console.warn('JSON parsing failed', e);
+    }
+
+    return data;
 }
 
 async function getAllStates(location) {
     const data = await callAPIMethod(ALL_STATES_METHOD, { lamin: location.latMin, lamax: location.latMax, lomin: location.lonMin, lomax: location.lonMax });
     let states = [];
 
-    console.log(`Found ${data.states ? data.states.length : 0} states matching location.`);
+    console.log(`Found ${(data && data.states) ? data.states.length : 0} states matching location.`);
 
-    if (data.states) {
+    if (data && data.states) {
         for (const stateInfo of data.states) {
             stateInfo[1] = stateInfo[1].trim();
             const callsign = stateInfo[1];
@@ -90,11 +99,15 @@ class State {
     }
 }
 
-async function main() {
+async function getPlanes() {
     const states = await getAllStates(LOCATION);
 
     console.log('Showing final data:');
     states.forEach(state => console.log(state.toString()))
+
+    return states;
 }
 
-main();
+module.exports = {
+    getPlanes
+};
