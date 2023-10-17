@@ -1,0 +1,22 @@
+{
+  "name": "planes",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kdzwinel/planes.git"
+  },
+  "author": "Konrad Dzwinel <kdzwinel@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kdzwinel/planes/issues"
+  },
+  "homepage": "https://github.com/kdzwinel/planes#readme",
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  }
+}

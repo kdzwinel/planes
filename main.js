@@ -1,11 +1,11 @@
+const fetch = require('node-fetch');
 const Address = require('./icao.js');
+const config = require('./CONFIG.js');
 
 const ALL_STATES_METHOD = 'states/all';
 const FLIGHT_INFO = 'flight';
 
 const OPENSKY_BASE_URL = 'https://opensky-network.org/api/';
-
-const AIRLABS_KEY = '7803057c-1779-4cc2-a357-4b02cc62e2e6';
 const AIRLABS_BASE_URL = 'https://airlabs.co/api/v9/';
 
 async function callAPIMethod(method, params) {
@@ -13,7 +13,7 @@ async function callAPIMethod(method, params) {
 
     if (method === FLIGHT_INFO) {
         baseURL = AIRLABS_BASE_URL;
-        params['api_key'] = AIRLABS_KEY;
+        params['api_key'] = config.airlabs_key;
     }
 
     const url = new URL(baseURL);
@@ -57,13 +57,7 @@ class State {
 }
 
 async function main() {
-    const states = await getAllStates({
-        latMin: '50.068616292543005',
-        lonMin: '19.758908052332092',
-        latMax: '50.11920385032793',
-        lonMax: '20.012410387785614'
-    });
-
+    const states = await getAllStates(config.location);
     states.forEach(state => console.log(state))
 }
 
