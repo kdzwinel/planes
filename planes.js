@@ -7,6 +7,7 @@ const ALL_STATES_METHOD = 'states/all';
 const FLIGHT_INFO = 'flight';
 
 const OPENSKY_BASE_URL = 'https://opensky-network.org/api/';
+const OPENSKY_CREDENTIALS = process.env.OPENSKY_CREDENTIALS || config.opensky_credentials;
 const AIRLABS_BASE_URL = 'https://airlabs.co/api/v9/';
 const AIRLABS_KEY = process.env.AIRLABS_KEY || config.airlabs_key;
 const LOCATION = {
@@ -26,19 +27,26 @@ function findAirline(icao) {
 
 async function callAPIMethod(method, params) {
     let baseURL = OPENSKY_BASE_URL;
+    let fetchConfig = {}
 
     if (method === FLIGHT_INFO) {
         baseURL = AIRLABS_BASE_URL;
         params['api_key'] = AIRLABS_KEY;
+    } else if (method === ALL_STATES_METHOD) {
+        fetchConfig = {
+            headers: {
+                'Authorization': 'Basic ' + btoa(OPENSKY_CREDENTIALS)
+            }
+        };
     }
 
     const url = new URL(baseURL);
     url.pathname += method;
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
 
-    const response = await fetch(url);
+    const response = await fetch(url, fetchConfig);
     
-    const data = null;
+    let data = null;
 
     try {
         data = await response.json();

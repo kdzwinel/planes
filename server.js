@@ -19,7 +19,7 @@ app.get('/result.txt', async (req, res) => {
 });
 
 app.get('/result.png', async (req, res) => {
-    const all = [{toString: () => 'okkkkkkk okkk'}];//await planes.getPlanes();
+    const all = await planes.getPlanes();
 
     const canvas = createCanvas(600, 800);
     const ctx = canvas.getContext('2d')

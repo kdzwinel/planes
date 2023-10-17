@@ -5,5 +5,6 @@ module.exports = {
         lonMin: '20.123',
         latMax: '10.234',
         lonMax: '20.234'
-    }
+    },
+    opensky_credentials: 'user:pass'
 };
