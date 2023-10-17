@@ -32,12 +32,9 @@ app.get('/result.png', async (req, res) => {
     ctx.font = '12px Impact';
     ctx.fillText(new Date(), 5, 790);
 
-    const stream = canvas.createPNGStream();
 
     res.set('Content-Type', 'image/png');
-
-    stream.on('end', () => res.end());
-    stream.pipe(res);
+    res.send(await canvas.encode('png'));
 });
 
 app.listen(port, () => {
