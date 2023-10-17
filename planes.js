@@ -1,5 +1,4 @@
 const fetch = require('node-fetch');
-const config = require('./CONFIG.js');
 const AIRPORTS = require('./airports.json');
 const AIRLINES = require('./airlines.json');
 
@@ -7,14 +6,14 @@ const ALL_STATES_METHOD = 'states/all';
 const FLIGHT_INFO = 'flight';
 
 const OPENSKY_BASE_URL = 'https://opensky-network.org/api/';
-const OPENSKY_CREDENTIALS = process.env.OPENSKY_CREDENTIALS || config.opensky_credentials;
+const OPENSKY_CREDENTIALS = process.env.OPENSKY_CREDENTIALS;
 const AIRLABS_BASE_URL = 'https://airlabs.co/api/v9/';
-const AIRLABS_KEY = process.env.AIRLABS_KEY || config.airlabs_key;
+const AIRLABS_KEY = process.env.AIRLABS_KEY;
 const LOCATION = {
-    latMin: process.env.LAT_MIN || config.location.latMin,
-    latMax: process.env.LAT_MAX || config.location.latMax,
-    lonMin: process.env.LON_MIN || config.location.lonMin,
-    lonMax: process.env.LON_MAX || config.location.lonMax
+    latMin: process.env.LAT_MIN,
+    latMax: process.env.LAT_MAX,
+    lonMin: process.env.LON_MIN,
+    lonMax: process.env.LON_MAX
 };
 
 function findAirport(icao) {
