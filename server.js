@@ -32,9 +32,13 @@ app.get('/result.png', async (req, res) => {
     ctx.font = '12px Impact';
     ctx.fillText(new Date(), 5, 790);
 
+    const img = await canvas.encode('png');
 
-    res.set('Content-Type', 'image/png');
-    res.send(await canvas.encode('png'));
+    res.writeHead(200, {
+      'Content-Type': 'image/png',
+      'Content-Length': img.length
+    });
+    res.end(img);
 });
 
 app.listen(port, () => {
