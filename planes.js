@@ -103,7 +103,7 @@ class State {
         const from = this.departure ? `${this.departure.city}/${this.departure.country}` : (this.dep_icao || '?');
         const to = this.arrival ? `${this.arrival.city}/${this.arrival.country}` : (this.arr_icao || '?');
 
-        return `✈️ ${airline} ${this.callsign} (${from} → ${to})`;
+        return `✈ ${airline} ${this.callsign} (${from} → ${to})`;
     }
 }
 

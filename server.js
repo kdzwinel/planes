@@ -2,7 +2,7 @@ const express = require('express');
 const planes = require('./planes');
 const { createCanvas } = require('canvas')
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.get('/result.json', async (req, res) => {
     const all = await planes.getPlanes();
@@ -24,13 +24,13 @@ app.get('/result.png', async (req, res) => {
     const canvas = createCanvas(600, 800);
     const ctx = canvas.getContext('2d')
 
-    ctx.font = '30px Impact';
+    ctx.font = '20px Impact';
     all.forEach((p, index) => {
-        ctx.fillText(p.toString(), 10, 100 * index + 30);
+        ctx.fillText(p.toString(), 5, 25 * (index + 1));
     });
 
     ctx.font = '12px Impact';
-    ctx.fillText(new Date(), 10, 790);
+    ctx.fillText(new Date(), 5, 790);
 
     const stream = canvas.createPNGStream();
 
