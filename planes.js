@@ -85,11 +85,19 @@ async function getFlight(callsign) {
     return data && data.response;
 }
 
+function guessAirlineIcaoFromCallsign(callsign) {
+    const guess = callsign.match(/^[A-Z]{2,}/);
+
+    return guess ? guess[0] : undefined;
+}
+
 function createPlane(stateInfo, flightInfo) {
     const plane = {};
 
     const STATE_FIELDS = ['icao24', 'callsign', 'origin_country', 'time_position', 'last_contact', 'longitude', 'latitude', 'baro_altitude', 'on_ground', 'velocity', 'true_track', 'vertical_rate', 'sensors', 'geo_altitude', 'squawk', 'spi', 'position_source', 'category'];
     STATE_FIELDS.forEach((fieldName, index) => plane[fieldName] = stateInfo[index]);
+
+    this.airline_icao = guessAirlineIcaoFromCallsign(this.callsign);
 
     if (flightInfo) {
         const FLIGHT_FIELDS = ['dep_icao', 'arr_icao', 'type', 'manufacturer', 'engine', 'model', 'built', 'airline_icao', 'airline_iata'];
