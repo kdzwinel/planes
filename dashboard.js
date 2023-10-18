@@ -1,4 +1,5 @@
 const { createCanvas } = require('@napi-rs/canvas');
+const PNG = require('pngjs').PNG;
 
 function getAirline(plane) {
     return plane.airline ? plane.airline.name : '(unknown airline)';
@@ -16,7 +17,7 @@ function printPlane(plane) {
     return `✈ ${getAirline(plane)} ${plane.callsign} (${getDeparture(plane)} → ${getArrival(plane)})`;
 }
 
-function drawDashboard (planes, cacheDate) {
+async function drawDashboard (planes, cacheDate) {
     const canvas = createCanvas(600, 800);
     const ctx = canvas.getContext('2d');
 
@@ -50,7 +51,15 @@ function drawDashboard (planes, cacheDate) {
     }
     ctx.fillText('Image date: ' + (new Date()).toString(), 10, 790);
 
-    return canvas;
+    // convert PNG to colorType=0 (grayscale) so that Kindle can correctly display it
+    const rgbPNG = await canvas.encode('png');
+    const workPNG = PNG.sync.read(rgbPNG);
+
+    return PNG.sync.write(workPNG, {
+        width: 600,
+        height: 800,
+        colorType: 0
+    });
 }
 
 module.exports = {

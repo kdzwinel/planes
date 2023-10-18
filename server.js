@@ -35,23 +35,10 @@ app.get('/result.txt', async (req, res) => {
 
 app.get('/result.png', async (req, res) => {
     const all = await planesCached();
-    const canvas = drawDashboard(all, cacheDate);
-    const img = await canvas.encode('png');
+    const img = await drawDashboard(all, cacheDate);
 
     res.writeHead(200, {
       'Content-Type': 'image/png',
-      'Content-Length': img.length
-    });
-    res.end(img);
-});
-
-app.get('/result.jpg', async (req, res) => {
-    const all = await planesCached();
-    const canvas = drawDashboard(all, cacheDate);
-    const img = await canvas.encode('jpeg');
-
-    res.writeHead(200, {
-      'Content-Type': 'image/jpg',
       'Content-Length': img.length
     });
     res.end(img);
