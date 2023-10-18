@@ -102,6 +102,7 @@ async function drawDashboard(planes, cacheDate) {
         dateText += ', data date: ' + cacheDate.toLocaleString('pl-PL', {timeZone: 'Europe/Warsaw'});
     }
 
+    ctx.fillStyle = '#000000';
     ctx.font = '14px serif';
     ctx.fillText(dateText, 10, 790);
 
