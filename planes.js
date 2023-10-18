@@ -1,4 +1,5 @@
 const fetch = require('node-fetch');
+const {printPlane} = require('./dashboard');
 const AIRPORTS = require('./data/airports.json');
 const AIRLINES = require('./data/airlines.json');
 
@@ -71,7 +72,7 @@ async function getAllStates(location) {
             console.log(`Fetching flight data for ${callsign}.`);
 
             const flightInfo = await getFlight(callsign);
-            states.push(new State(stateInfo, flightInfo));
+            states.push(createPlane(stateInfo, flightInfo));
         }
     }
 
@@ -84,35 +85,29 @@ async function getFlight(callsign) {
     return data && data.response;
 }
 
-class State {
-    constructor(stateInfo, flightInfo) {
-        const STATE_FIELDS = ['icao24', 'callsign', 'origin_country', 'time_position', 'last_contact', 'longitude', 'latitude', 'baro_altitude', 'on_ground', 'velocity', 'true_track', 'vertical_rate', 'sensors', 'geo_altitude', 'squawk', 'spi', 'position_source', 'category'];
-        STATE_FIELDS.forEach((fieldName, index) => this[fieldName] = stateInfo[index]);
+function createPlane(stateInfo, flightInfo) {
+    const plane = {};
 
-        if (flightInfo) {
-            const FLIGHT_FIELDS = ['dep_icao', 'arr_icao', 'type', 'manufacturer', 'engine', 'model', 'built', 'airline_icao', 'airline_iata'];
-            FLIGHT_FIELDS.forEach(fieldName => this[fieldName] = flightInfo[fieldName]);
+    const STATE_FIELDS = ['icao24', 'callsign', 'origin_country', 'time_position', 'last_contact', 'longitude', 'latitude', 'baro_altitude', 'on_ground', 'velocity', 'true_track', 'vertical_rate', 'sensors', 'geo_altitude', 'squawk', 'spi', 'position_source', 'category'];
+    STATE_FIELDS.forEach((fieldName, index) => plane[fieldName] = stateInfo[index]);
 
-            this.departure = findAirport(this.dep_icao);
-            this.arrival = findAirport(this.arr_icao);
-            this.airline = findAirline(this.airline_icao);
-        }
+    if (flightInfo) {
+        const FLIGHT_FIELDS = ['dep_icao', 'arr_icao', 'type', 'manufacturer', 'engine', 'model', 'built', 'airline_icao', 'airline_iata'];
+        FLIGHT_FIELDS.forEach(fieldName => plane[fieldName] = flightInfo[fieldName]);
+
+        plane.departure = findAirport(plane.dep_icao);
+        plane.arrival = findAirport(plane.arr_icao);
+        plane.airline = findAirline(plane.airline_icao);
     }
 
-    toString() {
-        const airline = this.airline ? this.airline.name : '(unknown airline)';
-        const from = this.departure ? `${this.departure.city}/${this.departure.country}` : (this.dep_icao || '?');
-        const to = this.arrival ? `${this.arrival.city}/${this.arrival.country}` : (this.arr_icao || '?');
-
-        return `✈ ${airline} ${this.callsign} (${from} → ${to})`;
-    }
+    return plane;
 }
 
 async function getPlanes() {
     const states = await getAllStates(LOCATION);
 
     console.log('Showing final data:');
-    states.forEach(state => console.log(state.toString()))
+    states.forEach(plane => console.log(printPlane(plane)))
 
     return states;
 }
