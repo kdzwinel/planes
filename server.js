@@ -22,15 +22,22 @@ app.get('/result.png', async (req, res) => {
     const all = await planes.getPlanes();
 
     const canvas = createCanvas(600, 800);
-    const ctx = canvas.getContext('2d')
+    const ctx = canvas.getContext('2d');
 
-    ctx.font = '20px Impact';
+    ctx.font = '20px Arial';
     all.forEach((p, index) => {
         ctx.fillText(p.toString(), 5, 25 * (index + 1));
     });
 
-    ctx.font = '12px Impact';
-    ctx.fillText(new Date(), 5, 790);
+    ctx.lineWidth = 10;
+    ctx.strokeStyle = '#AFCBFF';
+    ctx.fillStyle = '#0E1C36';
+    //#D7F9FF, #F9FBF2, #FFEDE1
+
+    ctx.strokeRect(0, 0, 600, 800);
+
+    ctx.font = '12px Arial';
+    ctx.fillText((new Date()).toString(), 10, 790);
 
     const img = await canvas.encode('png');
 

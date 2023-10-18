@@ -1,3 +1,3 @@
-### Data
-https://openflights.org
-https://airlabs.co
+### Projects used
+- https://openflights.org - data
+- https://airlabs.co - data
