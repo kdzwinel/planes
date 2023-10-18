@@ -1,8 +1,10 @@
 const { createCanvas, GlobalFonts } = require('@napi-rs/canvas');
 const PNG = require('pngjs').PNG;
 const { getDistance } = require('geolib');
+const path = require('path');
 
-GlobalFonts.registerFromPath('./NotoEmoji-Bold.ttf', 'NotoEmoji');
+GlobalFonts.registerFromPath(path.join(__dirname, './NotoEmoji-Bold.ttf'), 'NotoEmoji');
+console.info(GlobalFonts.families);
 
 function getAirline(plane) {
     return plane.airline ? plane.airline.name : '(unknown airline)';
@@ -53,6 +55,9 @@ async function drawDashboard(planes, cacheDate) {
     ctx.fillRect(0, 0, 600, 800);
 
     ctx.fillStyle = '#000000';
+    let nearPlane = 0;
+    let farPlane = 0;
+
     planes
         .sort((a, b) => {
             return distanceFromHome(a) - distanceFromHome(b);
@@ -67,8 +72,20 @@ async function drawDashboard(planes, cacheDate) {
             // if far, make it less prominent
             if (distance > 10000) {
                 ctx.fillStyle = '#a9a9a9';
+                farPlane++;
+
+                // separator between planes that are close and far
+                if(nearPlane > 0 && farPlane === 1) {
+                    ctx.lineWidth = 5;
+                    ctx.beginPath();
+                    ctx.moveTo(0, unitSize * index + topMargin - topLineSize);
+                    ctx.lineTo(600, unitSize * index + topMargin - topLineSize);
+                    ctx.closePath();
+                    ctx.stroke();
+                }
             } else {
                 ctx.fillStyle = '#000000';
+                nearPlane++;
             }
 
             ctx.font = '30px serif';
@@ -87,12 +104,15 @@ async function drawDashboard(planes, cacheDate) {
 
     ctx.strokeRect(0, 0, 600, 800);
 
-    ctx.font = '14px serif';
-    if (cacheDate) {
-        ctx.fillText('Data date:   ' + cacheDate.toLocaleString('pl-PL', {timeZone: 'Europe/Warsaw'}), 10, 775);
-    }
     const date = new Date();
-    ctx.fillText('Image date: ' + date.toLocaleString('pl-PL', {timeZone: 'Europe/Warsaw'}), 10, 790);
+    let dateText = 'Image date: ' + date.toLocaleString('pl-PL', {timeZone: 'Europe/Warsaw'});
+
+    if (cacheDate) {
+        dateText += ', data date: ' + cacheDate.toLocaleString('pl-PL', {timeZone: 'Europe/Warsaw'});
+    }
+
+    ctx.font = '14px serif';
+    ctx.fillText(dateText, 10, 790);
 
     // convert PNG to colorType=0 (grayscale) so that Kindle can correctly display it
     const rgbPNG = await canvas.encode('png');

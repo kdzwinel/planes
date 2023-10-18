@@ -18,4 +18,6 @@ async function handler(req, res) {
   }
 };
 
+handler();
+
 module.exports = handler;
