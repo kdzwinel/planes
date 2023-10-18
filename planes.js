@@ -86,7 +86,7 @@ async function getFlight(callsign) {
 }
 
 function guessAirlineIcaoFromCallsign(callsign) {
-    const guess = callsign.match(/^[A-Z]{2,}/);
+    const guess = callsign.match(/^[A-Z]{3}/);
 
     return guess ? guess[0] : undefined;
 }
