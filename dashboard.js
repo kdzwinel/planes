@@ -1,16 +1,29 @@
 const { createCanvas } = require('@napi-rs/canvas');
 const PNG = require('pngjs').PNG;
+const {getDistance} = require('geolib');
 
 function getAirline(plane) {
     return plane.airline ? plane.airline.name : '(unknown airline)';
 }
 
 function getDeparture(plane) {
-    return plane.departure ? `${plane.departure.city}/${plane.departure.country}` : (plane.dep_icao || '?');
+    return plane.departure ? `${plane.departure.city}` : (plane.dep_icao || '?');
 }
 
 function getArrival(plane) {
-    return plane.arrival ? `${plane.arrival.city}/${plane.arrival.country}` : (plane.arr_icao || '?');
+    return plane.arrival ? `${plane.arrival.city}` : (plane.arr_icao || '?');
+}
+
+function distanceFromHome(plane) {
+    const meters = getDistance({
+        latitude: process.env.HOME_LAT,
+        longitude: process.env.HOME_LON
+    }, {
+        latitude: plane.latitude,
+        longitude: plane.longitude
+    });
+
+    return (meters/1000).toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits:2 }) + ' km';
 }
 
 function printPlane(plane) {
@@ -27,13 +40,13 @@ async function drawDashboard (planes, cacheDate) {
     ctx.fillStyle = '#000000';
     planes.forEach((plane, index) => {
         const topMargin = 65;
-        const topLineSize = 25;
-        const bottomLineSize = 30;
+        const topLineSize = 35;
+        const bottomLineSize = 40;
         const unitSize = topLineSize + bottomLineSize;
 
-        ctx.font = '15px serif';
-        ctx.fillText(`${getAirline(plane)} ${plane.callsign}`, 10, unitSize * index + topMargin);
-        ctx.font = '25px serif';
+        ctx.font = '20px serif';
+        ctx.fillText(`${getAirline(plane)} ${plane.callsign} (${distanceFromHome(plane)})`, 10, unitSize * index + topMargin);
+        ctx.font = '35px serif';
         ctx.fillText(`${getDeparture(plane)} → ${getArrival(plane)}`, 20, unitSize * index + topMargin + topLineSize);
     });
 
