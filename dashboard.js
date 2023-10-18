@@ -87,11 +87,12 @@ async function drawDashboard(planes, cacheDate) {
 
     ctx.strokeRect(0, 0, 600, 800);
 
-    ctx.font = '12px serif';
+    ctx.font = '14px serif';
     if (cacheDate) {
-        ctx.fillText('Data date: ' + cacheDate, 10, 777);
+        ctx.fillText('Data date:   ' + cacheDate.toLocaleString('pl-PL', {timeZone: 'Europe/Warsaw'}), 10, 775);
     }
-    ctx.fillText('Image date: ' + (new Date()).toString(), 10, 790);
+    const date = new Date();
+    ctx.fillText('Image date: ' + date.toLocaleString('pl-PL', {timeZone: 'Europe/Warsaw'}), 10, 790);
 
     // convert PNG to colorType=0 (grayscale) so that Kindle can correctly display it
     const rgbPNG = await canvas.encode('png');
