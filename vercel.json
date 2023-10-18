@@ -11,9 +11,5 @@
         "src": "/(.*)",
         "dest": "server.js"
       }
-    ],
-    "crons": [{
-      "path": "/api/data-cache",
-      "schedule": "/5 * * * *"
-    }]
+    ]
   }
