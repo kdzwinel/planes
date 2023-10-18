@@ -50,6 +50,14 @@ async function drawDashboard (planes, cacheDate) {
         const topLineSize = 25 + 20;
         const bottomLineSize = 50 + 10;
         const unitSize = topLineSize + bottomLineSize;
+        const distance = distanceFromHome(plane);
+
+        // if far, make it less prominent
+        if (distance > 10000) {
+            ctx.fillStyle = '#c0c0c0';
+        } else {
+            ctx.fillStyle = '#000000';
+        }
 
         ctx.font = '30px serif';
         ctx.fillText(`${getAirline(plane)} ${plane.callsign} (${distanceFromHomeFormatted(plane)})`, 10, unitSize * index + topMargin);
