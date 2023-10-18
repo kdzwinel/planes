@@ -4,7 +4,6 @@ const { getDistance } = require('geolib');
 const path = require('path');
 
 GlobalFonts.registerFromPath(path.join(__dirname, './NotoEmoji-Bold.ttf'), 'NotoEmoji');
-console.info(GlobalFonts.families);
 
 function getAirline(plane) {
     return plane.airline ? plane.airline.name : '(unknown airline)';
@@ -91,18 +90,10 @@ async function drawDashboard(planes, cacheDate) {
             ctx.font = '30px serif';
             ctx.fillText(`${getAirline(plane)} ${plane.callsign} (${distanceFromHomeFormatted(plane)})`, 10, unitSize * index + topMargin);
             ctx.font = '50px serif';
-            ctx.fillText(`${getDeparture(plane)} → ${getArrival(plane)}`, 35, unitSize * index + topMargin + topLineSize);
-            ctx.font = '20px NotoEmoji';
-            ctx.fillText(isFlying(plane) ? '\u{2708}\u{FE0F}' : '\u{1F6EC}', 5, unitSize * index + topMargin + topLineSize - 10);
+            ctx.fillText(`${getDeparture(plane)} › ${getArrival(plane)}`, 45, unitSize * index + topMargin + topLineSize);
+            ctx.font = '30px NotoEmoji';
+            ctx.fillText(isFlying(plane) ? '\u{2708}\u{FE0F}' : '\u{1F6EC}', 5, unitSize * index + topMargin + topLineSize - 5);
         });
-
-    ctx.lineWidth = 10;
-    ctx.strokeStyle = '#000000';
-    ctx.fillStyle = '#000000';
-
-    //#AFCBFF, #0E1C36, #D7F9FF, #F9FBF2, #FFEDE1
-
-    ctx.strokeRect(0, 0, 600, 800);
 
     const date = new Date();
     let dateText = 'Image date: ' + date.toLocaleString('pl-PL', {timeZone: 'Europe/Warsaw'});
