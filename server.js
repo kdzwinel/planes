@@ -29,10 +29,14 @@ app.get('/result.png', async (req, res) => {
         ctx.fillText(p.toString(), 5, 25 * (index + 1));
     });
 
+    ctx.fillStyle = '#D7F9FF';
+    ctx.fillRect(0,0,600,800);
+
     ctx.lineWidth = 10;
     ctx.strokeStyle = '#AFCBFF';
     ctx.fillStyle = '#0E1C36';
-    //#D7F9FF, #F9FBF2, #FFEDE1
+    
+    //#AFCBFF, #0E1C36, #D7F9FF, #F9FBF2, #FFEDE1
 
     ctx.strokeRect(0, 0, 600, 800);
 
