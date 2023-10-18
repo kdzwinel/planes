@@ -15,14 +15,17 @@ function getArrival(plane) {
 }
 
 function distanceFromHome(plane) {
-    const meters = getDistance({
+    return getDistance({
         latitude: process.env.HOME_LAT,
         longitude: process.env.HOME_LON
     }, {
         latitude: plane.latitude,
         longitude: plane.longitude
     });
+}
 
+function distanceFromHomeFormatted(plane) {
+    const meters = distanceFromHome(plane);
     return (meters/1000).toLocaleString('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits:2 }) + ' km';
 }
 
@@ -38,15 +41,19 @@ async function drawDashboard (planes, cacheDate) {
     ctx.fillRect(0,0,600,800);
 
     ctx.fillStyle = '#000000';
-    planes.forEach((plane, index) => {
+    planes
+    .sort((a, b) => {
+        return distanceFromHome(a) - distanceFromHome(b);
+    })
+    .forEach((plane, index) => {
         const topMargin = 65;
-        const topLineSize = 35;
-        const bottomLineSize = 40;
+        const topLineSize = 25 + 20;
+        const bottomLineSize = 50 + 10;
         const unitSize = topLineSize + bottomLineSize;
 
-        ctx.font = '20px serif';
-        ctx.fillText(`${getAirline(plane)} ${plane.callsign} (${distanceFromHome(plane)})`, 10, unitSize * index + topMargin);
-        ctx.font = '35px serif';
+        ctx.font = '30px serif';
+        ctx.fillText(`${getAirline(plane)} ${plane.callsign} (${distanceFromHomeFormatted(plane)})`, 10, unitSize * index + topMargin);
+        ctx.font = '50px serif';
         ctx.fillText(`${getDeparture(plane)} → ${getArrival(plane)}`, 20, unitSize * index + topMargin + topLineSize);
     });
 
