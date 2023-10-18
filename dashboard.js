@@ -26,7 +26,7 @@ async function drawDashboard (planes, cacheDate) {
 
     ctx.fillStyle = '#000000';
     planes.forEach((plane, index) => {
-        const topMargin = 25;
+        const topMargin = 65;
         const topLineSize = 25;
         const bottomLineSize = 30;
         const unitSize = topLineSize + bottomLineSize;
