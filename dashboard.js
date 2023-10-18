@@ -76,7 +76,7 @@ async function drawDashboard(planes, cacheDate) {
             ctx.font = '50px serif';
             ctx.fillText(`${getDeparture(plane)} → ${getArrival(plane)}`, 35, unitSize * index + topMargin + topLineSize);
             ctx.font = '20px NotoEmoji';
-            ctx.fillText(isFlying(plane) ? '✈️' : '🛬', 5, unitSize * index + topMargin + topLineSize - 10);
+            ctx.fillText(isFlying(plane) ? '\u{2708}\u{FE0F}' : '\u{1F6EC}', 5, unitSize * index + topMargin + topLineSize - 10);
         });
 
     ctx.lineWidth = 10;
