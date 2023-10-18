@@ -101,14 +101,15 @@ function createPlane(stateInfo, flightInfo) {
         const FLIGHT_FIELDS = ['dep_icao', 'arr_icao', 'type', 'manufacturer', 'engine', 'model', 'built', 'airline_icao', 'airline_iata'];
         FLIGHT_FIELDS.forEach(fieldName => plane[fieldName] = flightInfo[fieldName]);
 
-        if (plane.callsign && !plane.airline_icao) {
-            plane.airline_icao = guessAirlineIcaoFromCallsign(plane.callsign);
-        }
-
         plane.departure = findAirport(plane.dep_icao);
         plane.arrival = findAirport(plane.arr_icao);
-        plane.airline = findAirline(plane.airline_icao);
     }
+
+    if (!plane.airline_icao && plane.callsign) {
+        plane.airline_icao = guessAirlineIcaoFromCallsign(plane.callsign);
+    }
+
+    plane.airline = findAirline(plane.airline_icao);
 
     return plane;
 }
