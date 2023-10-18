@@ -1,6 +1,6 @@
 const fetch = require('node-fetch');
-const AIRPORTS = require('./airports.json');
-const AIRLINES = require('./airlines.json');
+const AIRPORTS = require('./data/airports.json');
+const AIRLINES = require('./data/airlines.json');
 
 const ALL_STATES_METHOD = 'states/all';
 const FLIGHT_INFO = 'flight';
@@ -42,6 +42,8 @@ async function callAPIMethod(method, params) {
     const url = new URL(baseURL);
     url.pathname += method;
     Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+
+    console.log('Calling ', url.toString());
 
     const response = await fetch(url, fetchConfig);
     

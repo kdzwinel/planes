@@ -1,8 +1,8 @@
 const express = require('express');
 const planes = require('./planes');
-const { createCanvas } = require('@napi-rs/canvas')
+const getDashboard = require('./dashboard');
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3001;
 
 app.get('/result.json', async (req, res) => {
     const all = await planes.getPlanes();
@@ -20,33 +20,23 @@ app.get('/result.txt', async (req, res) => {
 
 app.get('/result.png', async (req, res) => {
     const all = await planes.getPlanes();
-
-    const canvas = createCanvas(600, 800);
-    const ctx = canvas.getContext('2d');
-
-    ctx.font = '20px Arial';
-    all.forEach((p, index) => {
-        ctx.fillText(p.toString(), 5, 25 * (index + 1));
-    });
-
-    ctx.fillStyle = '#D7F9FF';
-    ctx.fillRect(0,0,600,800);
-
-    ctx.lineWidth = 10;
-    ctx.strokeStyle = '#AFCBFF';
-    ctx.fillStyle = '#0E1C36';
-    
-    //#AFCBFF, #0E1C36, #D7F9FF, #F9FBF2, #FFEDE1
-
-    ctx.strokeRect(0, 0, 600, 800);
-
-    ctx.font = '12px Arial';
-    ctx.fillText((new Date()).toString(), 10, 790);
-
+    const canvas = getDashboard(all);
     const img = await canvas.encode('png');
 
     res.writeHead(200, {
       'Content-Type': 'image/png',
+      'Content-Length': img.length
+    });
+    res.end(img);
+});
+
+app.get('/result.jpg', async (req, res) => {
+    const all = await planes.getPlanes();
+    const canvas = getDashboard(all);
+    const img = await canvas.encode('jpeg');
+
+    res.writeHead(200, {
+      'Content-Type': 'image/jpg',
       'Content-Length': img.length
     });
     res.end(img);
